@@ -117,8 +117,3 @@ private static final String SECRET_KEY = "mysupersecretkeythatisverysecure123456
 - 403: Ensure `/register` and `/login` are public and CSRF is disabled.
 - 401: Ensure correct token is sent in headers.
 - Token generation error: Use a secret with at least 256 bits.
-
-## License
-
-This project is licensed under the MIT License.
-
