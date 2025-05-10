@@ -7,13 +7,14 @@ import com.springboot.librarymanagement.repository.UserRepository;
 import com.springboot.librarymanagement.request.UserRequest;
 import com.springboot.librarymanagement.response.UserResponse;
 import com.springboot.librarymanagement.security.JwtTokenProvider;
+import com.springboot.librarymanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

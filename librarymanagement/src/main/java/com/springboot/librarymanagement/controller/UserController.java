@@ -3,7 +3,7 @@ package com.springboot.librarymanagement.controller;
 import com.springboot.librarymanagement.entity.User;
 import com.springboot.librarymanagement.request.UserRequest;
 import com.springboot.librarymanagement.response.UserResponse;
-import com.springboot.librarymanagement.serviceimpl.UserServiceImpl;
+import com.springboot.librarymanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import com.nimbusds.jose.JOSEException;
 public class UserController {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     //Endpoint to add user
     @PostMapping("/add-user")
@@ -35,7 +35,7 @@ public class UserController {
         }
     }
 
-    // Endpoint to login a user
+    // Endpoint to Log in a user
     @PostMapping("/login")
     public ResponseEntity<UserResponse> loginUser(@RequestBody UserRequest userRequest) {
         try {
