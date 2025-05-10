@@ -44,6 +44,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/register", "/api/users/login","/api/users/add-user").permitAll()
                         .anyRequest().authenticated()
                 )
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/users/login")
+                        .permitAll()
+                )
                 .httpBasic(); // Plain usage — no withDefaults() needed
 
         return http.build();

@@ -36,7 +36,7 @@ public class UserServiceImpl {
         user.setUsername(userRequest.getUsername());
         user.setPassword(userRequest.getPassword());  // No encryption, ideally encrypt this
         user.setRole(Role.valueOf(userRequest.getRole().toUpperCase()));  // Assign role
-        userRepository.save(user);
+        //userRepository.save(user);
 
         // Generate JWT token for the registered user
         String token = jwtTokenProvider.generateToken(user);
