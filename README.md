@@ -1,4 +1,4 @@
-# Library Management 
+# 📚 Library Management System API Documentation
 
 A simple RESTful backend built with **Spring Boot 3.x** and **Java 21** that provides JWT-based authentication and role-based access for Admin, Librarian, and Member users.
 
@@ -117,3 +117,184 @@ private static final String SECRET_KEY = "mysupersecretkeythatisverysecure123456
 - 403: Ensure `/register` and `/login` are public and CSRF is disabled.
 - 401: Ensure correct token is sent in headers.
 - Token generation error: Use a secret with at least 256 bits.
+
+
+## 📘 Book Control System
+
+### ➕ Create Book
+**POST** `/api/books/add`
+
+**Request Body**
+```json
+{
+  "booktitle": "1984",
+  "authorname": "George Orwell",
+  "isbn": "9780451524934",
+  "categoryId": 1,
+  "tagIds": [1, 2]
+}
+```
+
+**Response**
+```json
+{
+  "bookid": 1,
+  "booktitle": "1984",
+  "authorname": "George Orwell",
+  "isbn": "9780451524934",
+  "category": {
+    "id": 1,
+    "name": "Dystopian"
+  },
+  "tags": [
+    { "id": 1, "name": "Classic" },
+    { "id": 2, "name": "Political" }
+  ]
+}
+```
+
+---
+
+### 🛠️ Update Book
+**PUT** `/api/books/update/{id}`
+
+**Request Body**
+```json
+{
+  "booktitle": "1984 - Updated",
+  "authorname": "George Orwell",
+  "isbn": "9780451524934",
+  "categoryId": 1,
+  "tagIds": [1, 3]
+}
+```
+
+---
+
+### ❌ Delete Book
+**DELETE** `/api/books/delete-by/{id}`
+
+---
+
+### 📖 Get All Books
+**GET** `/api/books/get-all`
+
+---
+
+### 📖 Get Book By ID
+**GET** `/api/books/{id}`
+
+---
+
+## 🏷️ Tag Endpoints
+
+### ➕ Add Tag
+**POST** `/api/tags/add-tag`
+
+**Request Body**
+```json
+{
+  "name": "Romantic"
+}
+```
+
+**Response**
+```json
+{
+  "id": 8,
+  "name": "Romantic"
+}
+```
+
+---
+
+### 🛠️ Update Tag
+**PUT** `/api/tags/{id}`
+
+**Request Body**
+```json
+{
+  "name": "Sci-Fi"
+}
+```
+
+---
+
+### ❌ Delete Tag
+**DELETE** `/api/tags/{id}`
+
+---
+
+### 📖 Get All Tags
+**GET** `/api/tags/get-all`
+
+---
+
+### 📖 Get Tag By ID
+**GET** `/api/tags/{id}`
+
+---
+
+## 🗂️ Category Endpoints
+
+### ➕ Create Category
+**POST** `/api/categories/create`
+
+**Request Body**
+```json
+{
+  "name": "Mystery"
+}
+```
+
+---
+
+### 🛠️ Update Category
+**PUT** `/api/categories/{id}`
+
+**Request Body**
+```json
+{
+  "name": "Historical Fiction"
+}
+```
+
+---
+
+### ❌ Delete Category
+**DELETE** `/api/categories/{id}`
+
+---
+
+### 📖 Get All Categories
+**GET** `/api/categories/get-all`
+
+---
+
+### 📖 Get Category By ID
+**GET** `/api/categories/{id}`
+
+---
+
+## 🔄 Sample Book JSONs
+
+### 📘 Book JSON Example
+```json
+{
+  "booktitle": "Pride and Prejudice",
+  "authorname": "Jane Austen",
+  "isbn": "9781503290563",
+  "categoryId": 2,
+  "tagIds": [4, 5]
+}
+```
+
+```json
+{
+  "booktitle": "The Notebook",
+  "authorname": "Nicholas Sparks",
+  "isbn": "9780446605236",
+  "categoryId": 5,
+  "tagIds": [8]
+}
+```
