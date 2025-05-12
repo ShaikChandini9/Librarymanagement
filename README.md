@@ -298,3 +298,187 @@ private static final String SECRET_KEY = "mysupersecretkeythatisverysecure123456
   "tagIds": [8]
 }
 ```
+## 📘 Book Borrowing System
+
+This module enables issuing and returning books with:
+- ✅ Due date tracking (configurable)
+- ✅ Automatic fine calculation for overdue books
+- ✅ Book availability management
+
+---
+
+## ⚙️ Configuration
+
+Set the default return period in `application.properties`:
+
+```properties
+borrow.due.days=14
+```
+
+> This means books must be returned within 14 days of the issue date.
+
+---
+
+## 🧾 API Endpoints
+
+### ✅ Issue Book
+
+- **URL:** `POST /api/borrow/issue`
+- **Headers:** `Content-Type: application/json`
+
+#### Request JSON:
+```json
+{
+  "bookId": 1,
+  "userId": 2
+}
+```
+
+#### Response (Success):
+```json
+{
+  "message": "Book issued successfully",
+  "fine": 0.0
+}
+```
+
+#### Response (Book Not Available):
+```json
+{
+  "message": "Book is not available",
+  "fine": 0.0
+}
+```
+
+---
+
+### 🔁 Return Book
+
+- **URL:** `POST /api/borrow/return`
+- **Headers:** `Content-Type: application/json`
+
+#### Request JSON:
+```json
+{
+  "borrowRecordId": 5
+}
+```
+
+#### Response (Returned on Time):
+```json
+{
+  "message": "Book returned successfully",
+  "fine": 0.0
+}
+```
+
+#### Response (Returned Late):
+```json
+{
+  "message": "Book returned successfully",
+  "fine": 10.0
+}
+```
+
+---
+
+## 🧠 Entity Overview
+
+### 📘 Book
+```java
+Long id;
+String title;
+boolean available;
+```
+
+### 👤 User
+```java
+Long id;
+String name;
+```
+
+### 📄 BorrowRecord
+```java
+Long id;
+User user;
+Book book;
+LocalDate issueDate;
+LocalDate dueDate;
+LocalDate returnDate;
+Double fine;
+```
+
+---
+
+## 🛠️ Services
+
+### BorrowService.java
+```java
+BorrowResponse issueBook(IssueBookRequest request);
+BorrowResponse returnBook(ReturnBookRequest request);
+```
+
+### BorrowServiceImpl.java
+
+- Sets due date: `issueDate + borrow.due.days`
+- Marks book as unavailable when issued
+- Marks book as available when returned
+- Calculates fine for overdue returns
+
+---
+
+## 📨 DTOs
+
+### IssueBookRequest.java
+```json
+{
+  "bookId": 1,
+  "userId": 2
+}
+```
+
+### ReturnBookRequest.java
+```json
+{
+  "borrowRecordId": 5
+}
+```
+
+### BorrowResponse.java
+```json
+{
+  "message": "Book returned successfully",
+  "fine": 0.0
+}
+```
+
+---
+
+## 🧪 Repositories
+
+- `BookRepository`
+- `UserRepository`
+- `BorrowRecordRepository`
+
+---
+
+## 👣 Example Flow
+
+1. **User** requests to borrow a book.
+2. System checks if `book.available == true`.
+3. If available:
+   - `BorrowRecord` is created.
+   - `Book.available` is set to `false`.
+4. When book is returned:
+   - `returnDate` is recorded.
+   - Fine is calculated if returned after `dueDate`.
+   - `Book.available` is set to `true`.
+
+---
+
+## 📝 Notes
+
+- Fine per day for late return is `$2.0`.
+- You can adjust the due period using `borrow.due.days` in the config.
+- Make sure the `bookId` and `userId` you use exist in the database.
+
