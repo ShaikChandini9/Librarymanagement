@@ -22,6 +22,8 @@ public class Book {
     private String authorname;
     private String isbn;
 
+    private boolean available = true;
+
     @ManyToOne
     private Category category;
 
@@ -79,5 +81,13 @@ public class Book {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

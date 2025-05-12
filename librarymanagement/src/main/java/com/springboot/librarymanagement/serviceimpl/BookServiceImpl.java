@@ -63,7 +63,8 @@ public class BookServiceImpl implements BookService {
         book.setBooktitle(request.getBooktitle());             // ✅ must set
         book.setAuthorname(request.getAuthorname());           // ✅ must set
         book.setIsbn(request.getIsbn());               // ✅ already working
-        book.setCategory(category);                    // ✅ must set
+        book.setCategory(category);// ✅ must set
+        book.setAvailable(true);
         book.setTags(new HashSet<>(tags));
 
         bookRepo.save(book);
