@@ -36,7 +36,7 @@ public class BorrowServiceImpl implements BorrowService {
         Book book = bookRepo.findById(request.getBookId())
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        if (!book.isAvailable()) {
+        if (book.getAvailabilityCount() <= 0) {
             return new BorrowResponse("Book is not available", 0.0);
         }
 
@@ -47,11 +47,11 @@ public class BorrowServiceImpl implements BorrowService {
         record.setBook(book);
         record.setUser(user);
         record.setIssueDate(LocalDate.now());
-        record.setDueDate(LocalDate.now().plusDays(dueDays));  // uses configurable value
+        record.setDueDate(LocalDate.now().plusDays(dueDays));
 
         borrowRepo.save(record);
 
-        book.setAvailable(false);
+        book.setAvailabilityCount(book.getAvailabilityCount() - 1);
         bookRepo.save(book);
 
         return new BorrowResponse("Book issued successfully", 0.0);
@@ -72,11 +72,12 @@ public class BorrowServiceImpl implements BorrowService {
         }
 
         Book book = record.getBook();
-        book.setAvailable(true);
+        book.setAvailabilityCount(book.getAvailabilityCount() + 1); // increment availability
 
         borrowRepo.save(record);
         bookRepo.save(book);
 
         return new BorrowResponse("Book returned successfully", fine);
     }
+
 }

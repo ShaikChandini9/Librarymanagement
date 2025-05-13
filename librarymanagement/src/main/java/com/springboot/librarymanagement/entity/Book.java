@@ -22,7 +22,9 @@ public class Book {
     private String authorname;
     private String isbn;
 
-    private boolean available = true;
+    @Column(nullable = false)
+    private int availabilityCount;
+
 
     @ManyToOne
     private Category category;
@@ -83,11 +85,11 @@ public class Book {
         this.tags = tags;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public int getAvailabilityCount() {
+        return availabilityCount;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setAvailabilityCount(int availabilityCount) {
+        this.availabilityCount = availabilityCount;
     }
 }

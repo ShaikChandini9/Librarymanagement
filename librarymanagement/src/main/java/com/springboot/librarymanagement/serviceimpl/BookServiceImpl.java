@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,17 +60,31 @@ public class BookServiceImpl implements BookService {
 
         List<Tag> tags = tagRepo.findAllById(request.getTagIds());
 
-        Book book = new Book();
-        book.setBooktitle(request.getBooktitle());             // ✅ must set
-        book.setAuthorname(request.getAuthorname());           // ✅ must set
-        book.setIsbn(request.getIsbn());               // ✅ already working
-        book.setCategory(category);// ✅ must set
-        book.setAvailable(true);
-        book.setTags(new HashSet<>(tags));
+        Optional<Book> optionalBook = bookRepo.findByBooktitleAndAuthornameAndIsbn(
+                request.getBooktitle(), request.getAuthorname(), request.getIsbn());
+
+        Book book;
+
+        if (optionalBook.isPresent()) {
+            // Book exists: increment availability count
+            book = optionalBook.get();
+            book.setAvailabilityCount(book.getAvailabilityCount() + 1);
+        } else {
+            // Book doesn't exist: create a new one
+            book = new Book();
+            book.setBooktitle(request.getBooktitle());
+            book.setAuthorname(request.getAuthorname());
+            book.setIsbn(request.getIsbn());
+            book.setCategory(category);
+            //book.setAvailabilityCount(true); // Optional based on availabilityCount
+            book.setAvailabilityCount(1); // Initial count
+            book.setTags(new HashSet<>(tags));
+        }
 
         bookRepo.save(book);
         return mapToResponse(book);
     }
+
 
     @Override
     public BookResponse updateBook(Long id, BookRequest request) {
