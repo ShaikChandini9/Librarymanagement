@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/categories/**").permitAll()
                         .requestMatchers("/api/tags/**").permitAll()
                         .requestMatchers("/api/borrow/**").permitAll()
+                        .requestMatchers("/api/reservations/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

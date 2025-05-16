@@ -1,12 +1,9 @@
 package com.springboot.librarymanagement.controller;
 
-import com.springboot.librarymanagement.entity.Book;
 import com.springboot.librarymanagement.request.BookRequest;
 import com.springboot.librarymanagement.response.BookResponse;
 import com.springboot.librarymanagement.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
