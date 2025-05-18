@@ -30,8 +30,6 @@ A comprehensive and secure Library Management System built using **Spring Boot 3
   - Author Name
   - Category/Genre
   - Availability (In Stock/Out)
-  - Language
-  - Year of Publication
 - **Dynamic Queries**: Designed flexible repository-level queries using Spring Data JPA Specifications or QueryDSL (optional) to support multi-parameter filtering.
 
 ### 📖 Borrow & Return System
