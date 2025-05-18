@@ -1,5 +1,7 @@
 package com.springboot.librarymanagement.response;
 
+import com.springboot.librarymanagement.entity.Book;
+
 import java.util.List;
 
 public class BookResponse {
@@ -8,8 +10,21 @@ public class BookResponse {
     private String booktitle;
     private String authorname;
     private String isbn;
+    private int availabilityCount;
+
+    public BookResponse(Book book) {
+        this.bookid = book.getBookid();
+        this.booktitle = book.getBooktitle();
+        this.authorname = book.getAuthorname();
+        this.isbn = book.getIsbn();
+        this.availabilityCount = book.getAvailabilityCount();
+    }
     private CategoryResponse category;
     private List<TagResponse> tags;
+
+    public BookResponse() {
+
+    }
 
     public Long getBookid() {
         return bookid;
@@ -57,5 +72,13 @@ public class BookResponse {
 
     public void setTags(List<TagResponse> tags) {
         this.tags = tags;
+    }
+
+    public int getAvailabilityCount() {
+        return availabilityCount;
+    }
+
+    public void setAvailabilityCount(int availabilityCount) {
+        this.availabilityCount = availabilityCount;
     }
 }
