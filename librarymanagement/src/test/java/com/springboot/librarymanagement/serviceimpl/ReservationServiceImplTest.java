@@ -4,6 +4,7 @@ import com.springboot.librarymanagement.entity.Book;
 import com.springboot.librarymanagement.entity.Reservation;
 import com.springboot.librarymanagement.entity.ReservationStatus;
 import com.springboot.librarymanagement.entity.User;
+import com.springboot.librarymanagement.exception.ResourceNotFoundException;
 import com.springboot.librarymanagement.repository.ReservationRepository;
 import com.springboot.librarymanagement.request.ReservationRequest;
 import com.springboot.librarymanagement.response.ReservationResponse;
@@ -115,4 +116,72 @@ public class ReservationServiceImplTest {
         assertEquals(reservationResponse.getId(), reservation.getId());
     }
 
+    @Test
+    public void approveReservationErrorTest(){
+
+        when(reservationRepository.findById(999L)).thenReturn(Optional.empty());
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () ->
+                reservationServiceImpl.approveReservation(999L));
+
+        assertEquals("Reservation not found with id : '999'", ex.getMessage());
+        verify(reservationRepository, times(1)).findById(999L);
+
+    }
+
+    @Test
+    public void approveReservationSuccessTest(){
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+        ReservationResponse reservationResponse = reservationServiceImpl.approveReservation(1L);
+        assertEquals(reservationResponse.getId(), reservation.getId());
+    }
+
+    @Test
+    void approveReservation_ShouldThrowIllegalStateException_WhenStatusIsNotPending() {
+
+        reservation.setStatus(ReservationStatus.APPROVED);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () ->
+                reservationServiceImpl.approveReservation(1L));
+
+        assertEquals("Only PENDING reservations can be approved.", ex.getMessage());
+        verify(reservationRepository).findById(1L);
+        verify(reservationRepository, never()).save(any());
+    }
+
+    @Test
+    void rejectReservation_ShouldReject_WhenStatusIsPending() {
+
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ReservationResponse response = reservationServiceImpl.rejectReservation(1L);
+
+        assertNotNull(response);
+    }
+
+    @Test
+    void rejectReservation_ShouldThrowResourceNotFoundException_WhenReservationNotFound() {
+
+        when(reservationRepository.findById(999L)).thenReturn(Optional.empty());
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () ->
+                reservationServiceImpl.rejectReservation(999L));
+
+        assertEquals("Reservation not found with id : '999'", exception.getMessage());
+        verify(reservationRepository).findById(999L);
+    }
+
+    @Test
+    void rejectReservation_ShouldThrowIllegalStateException_WhenStatusIsNotPending() {
+        reservation.setStatus(ReservationStatus.APPROVED); // Already approved
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+                reservationServiceImpl.rejectReservation(1L));
+
+        assertEquals("Only PENDING reservations can be rejected.", exception.getMessage());
+        verify(reservationRepository).findById(1L);
+        verify(reservationRepository, never()).save(any());
+    }
 }
